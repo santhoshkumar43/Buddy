@@ -1,0 +1,114 @@
+body {
+  margin: 0;
+}
+.main {
+  height: 100vh;
+  margin: 0;
+}
+.containerMain {
+  height: 100vh;
+  overflow: hidden;
+}
+.topBannerMain {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  height: 7%;
+  background-color: rgb(173, 222, 250);
+}
+.LogoMain {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.LogoMain img {
+  height: 30px;
+  margin-right: 20px;
+}
+.rightTopbannermain {
+}
+.rightTopbannermain img {
+  height: 20px;
+  margin: 0 10px;
+}
+
+.bottomBar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border: 0.5px solid rgb(216, 216, 216);
+  border-radius: 8px;
+  padding: 2px;
+  position: absolute;
+
+  bottom: 8px;
+  right: 10px;
+  left: 10px;
+}
+.bottomBar:hover {
+  border: 0.2px solid rgb(9 106 217);
+}
+
+.chatInput {
+  width: 95%;
+  background-color: none;
+  border: 0px;
+}
+.chatSend {
+  background-color: rgb(255, 255, 255);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0px solid rgb(211, 211, 211);
+  border-radius: 5px;
+
+  width: 3%;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+.chatSend:active {
+  transform: scale(0.95);
+}
+.chatSend img {
+  padding: 2px;
+  height: 16px;
+}
+input:focus {
+  outline: none;
+  background-color: white;
+}
+.chatArea {
+  padding: 10px;
+  height: 80%;
+  overflow: auto;
+  overflow-x: hidden;
+}
+.userChat {
+  width: fit-content;
+}
+.outeruserChat {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  margin: 5px 0px;
+}
+.userChat {
+  background-color: #f1f1f1;
+  padding: 10px;
+  border-radius: 10px;
+}
+.outerbotChat {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+.botChat {
+  width: fit-content;
+  max-width: 60%;
+  background-color: #e0f7fa;
+  padding: 10px;
+  border-radius: 10px;
+}

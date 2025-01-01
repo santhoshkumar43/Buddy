@@ -1,0 +1,148 @@
+.main-login {
+  display: flex;
+  flex-direction: row;
+}
+.banner-login {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  width: 35%;
+
+  background-color: rgb(0, 0, 0);
+  height: 100vh;
+}
+.banner-login p {
+  font-size: 72px;
+  color: rgb(255, 255, 255);
+}
+.container-login {
+  width: 65%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background: #f5f5f5;
+}
+.in-cont-login {
+  display: flex;
+  flex-direction: column;
+  width: 38%;
+}
+.banner-login img{
+  height: 80px
+
+}
+.heading-login {
+}
+.desc-login {
+  margin: 0px;
+  font-size: 16px;
+}
+.in-heading-login {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.heading-login button {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0px;
+  width: 45%;
+  border-radius: 10px;
+  background: #ffffff;
+  height: 30px;
+  border: 0px solid;
+  cursor: pointer;
+}
+.in-heading-login img {
+  height: 14px;
+}
+.in-heading-login p {
+  font-size: 12px;
+  margin: 0px 10px;
+  color: #858585;
+  font-weight: 400;
+}
+.input-login {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 20px;
+}
+.input-login input {
+  padding: 0px 15px;
+  height: 40px;
+  border-radius: 10px;
+  border: 0px solid;
+  background: #f5f5f5;
+}
+.input-login button {
+  height: 40px;
+  border-radius: 10px;
+  background-color: black;
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+}
+input:focus {
+  border: none;
+  outline: none;
+  background: #eaeaea;
+}
+.reg-login {
+  text-align: center;
+}
+a {
+  text-decoration: none;
+}
+
+@media screen and (max-width: 1200px) {
+  .in-cont-login {
+    width: 48%;
+  }
+}
+@media screen and (max-width: 950px) {
+  .in-cont-login {
+    width: 58%;
+  }
+}
+
+@media screen and (max-width: 750px) {
+  .in-cont-login {
+    width: 68%;
+  }
+}
+@media screen and (max-width: 700px) {
+  .main-login {
+    display: flex;
+    flex-direction: column;
+  }
+  .banner-login {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+    width: 100%;
+
+    background-color: rgb(0, 0, 0);
+    height: 30vh;
+  }
+  .container-login {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background: #f5f5f5;
+  }
+  .in-cont-login {
+    width: 80%;
+  }
+}
