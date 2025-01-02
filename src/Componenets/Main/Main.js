@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import Chat from "../Chat/Chat";
 import "./main.css";
-import notificationIcon from "../../../Images/bell.png";
-import sendBtn from "../../../Images/sendBtn.png";
-import chatboticon from "../../../Images/chatbot.png";
+import notificationIcon from "../../Images/bell.png";
+import sendBtn from "../../Images/sendBtn.png";
+import chatboticon from "../../Images/chatbot.png";
 import Loader from "../Loader/Loader.js";
 
 function Main() {
