@@ -1,10 +1,10 @@
 import React from "react";
 import "./Login.css";
-import google from "../../../Images/googleImg.png";
+import google from "../../Images/googleImg.png";
 import { auth, provider } from "../../firebase.js";
 import { signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import chatboticon from "../../../Images/chatbot.png";
+import chatboticon from "../../Images/chatbot.png";
 
 function Login({ setIsAuth }) {
   let navigate = useNavigate();
