@@ -10,16 +10,50 @@ function Main() {
   const [inputText, setInputText] = useState(""); // To store user input
   const [chatHistory, setChatHistory] = useState([]); // To store chat history (key-value pairs)
   const [error, setError] = useState(null); // To store errors
+  const [isLoading, setIsLoading] = useState(false); // To control loading spinner
   const chatContainerRef = useRef(null);
+  const socketRef = useRef(null); // Reference to the WebSocket connection
 
-  // Load chat history from local storage when component mounts
+  const userId = localStorage.getItem("UID"); // Use dynamic user ID from login/authentication context
+
+  // Establish WebSocket connection and fetch chat history
   useEffect(() => {
-    const savedChatHistory = localStorage.getItem("chatHistory");
-    if (savedChatHistory) {
-      setChatHistory(JSON.parse(savedChatHistory));
-    }
+    // Establish WebSocket connection with userId as a query parameter
+    socketRef.current = new WebSocket(
+      `https://buddy-backend-eggw.onrender.com/?userId=${userId}`
+    );
+
+    // Handle incoming WebSocket messages (including initial chat history)
+    socketRef.current.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+
+      // When the connection is established, the server sends the chat history
+      if (data.type === "previousMessages") {
+        const parsedHistory = data.messages.map((message) => ({
+          user: message.user,
+          bot: message.bot,
+        }));
+        setChatHistory(parsedHistory);
+      } else if (data.type === "newMessage") {
+        // Handle new message from WebSocket server
+        setChatHistory((prevHistory) => {
+          const updatedHistory = [...prevHistory];
+          updatedHistory[updatedHistory.length - 1].bot = data.message;
+          return updatedHistory;
+        });
+        setIsLoading(false);
+      }
+    };
+
+    // Cleanup WebSocket connection on unmount
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.close();
+      }
+    };
   }, []);
 
+  // Scroll to the bottom of the chat area whenever chat history is updated
   useEffect(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
@@ -27,73 +61,39 @@ function Main() {
     }
   }, [chatHistory]);
 
-  const fetchAIContent = async () => {
-    const url =
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyC-m-RJd8aZVRZeArNTbO09hYAImDcT4ks";
+  const sendMessage = () => {
+    if (inputText.trim() && socketRef.current) {
+      const userMessage = inputText;
+      const botMessage = "Bot is typing"; // Set a placeholder for the bot's reply
 
-    const payload = {
-      contents: [
+      // Add user input and bot placeholder to chat history
+      setChatHistory((prevHistory) => [
+        ...prevHistory,
         {
-          parts: [
-            {
-              text:
-                "if the following text is related to medical query or small talk you can respond, if not repond that i dont have info" +
-                inputText, // Use user input here
-            },
-          ],
+          user: userMessage,
+          bot: botMessage,
         },
-      ],
-    };
-    const botResponse = "Bot is typing";
-    const newChatHistory = [
-      ...chatHistory,
-      {
-        user: inputText,
-        bot: botResponse,
-      },
-    ];
-    setChatHistory(newChatHistory);
-    setInputText("");
+      ]);
+      setInputText(""); // Clear input field
 
-    const response = fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-    response
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        const newChatHistory = [
-          ...chatHistory,
-          {
-            user: inputText,
-            bot: data.candidates[0].content.parts[0].text,
-          },
-        ];
-        setChatHistory(newChatHistory);
-
-        // Save updated chat history to local storage
-        localStorage.setItem("chatHistory", JSON.stringify(newChatHistory));
-
-        setInputText(""); // Clear input field after sending
-        setError(null);
-      });
+      // Send user message to WebSocket server
+      socketRef.current.send(userMessage);
+      setIsLoading(true); // Show the loading spinner while waiting for the bot's response
+    }
   };
+
   return (
     <div className="main">
       <div className="sideNav"></div>
       <div className="containerMain">
         <div className="topBannerMain">
           <div className="LogoMain">
-            <img src={chatboticon} />
+            <img src={chatboticon} alt="Logo" />
             <span>Buddy</span>
           </div>
           <div className="rightTopbannermain">
-            <img src={notificationIcon} />
-            <img src={localStorage.photoURL} />
+            <img src={notificationIcon} alt="Notification" />
+            <img src={localStorage.photoURL} alt="User" />
           </div>
         </div>
         <div className="chatArea" ref={chatContainerRef}>
@@ -106,16 +106,12 @@ function Main() {
                   <div className="userChat">{chat.user}</div>
                 </div>
                 <div className="outerbotChat">
+                  <img src={chatboticon} alt="Bot" />
                   <div className="botChat">
                     {chat.bot === "Bot is typing" ? (
-                      <div>
-                        <Loader />
-                      </div>
+                      <Loader />
                     ) : (
-                      <div className="botResponsebulbe">
-                        <strong>Bot: </strong>
-                        {chat.bot}
-                      </div>
+                      <div className="botResponsebulbe">{chat.bot}</div>
                     )}
                   </div>
                 </div>
@@ -131,17 +127,17 @@ function Main() {
             value={inputText}
             onChange={(e) => setInputText(e.target.value)} // Update state on input change
           />
-
           <button
             className="chatSend"
-            onClick={fetchAIContent}
+            onClick={sendMessage}
             disabled={!inputText.trim()}
           >
-            <img src={sendBtn} />
+            <img src={sendBtn} alt="Send" />
           </button>
         </div>
       </div>
     </div>
   );
 }
+
 export default Main;
