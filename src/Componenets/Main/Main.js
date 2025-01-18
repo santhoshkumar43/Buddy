@@ -5,6 +5,7 @@ import notificationIcon from "../../Images/bell.png";
 import sendBtn from "../../Images/sendBtn.png";
 import chatboticon from "../../Images/chatbot.png";
 import Loader from "../Loader/Loader.js";
+import { useNavigate } from "react-router-dom";
 
 function Main() {
   const [inputText, setInputText] = useState(""); // To store user input
@@ -15,7 +16,10 @@ function Main() {
   const socketRef = useRef(null); // Reference to the WebSocket connection
 
   const userId = localStorage.getItem("UID"); // Use dynamic user ID from login/authentication context
-
+  let navigate = useNavigate();
+  if (localStorage.getItem("isAuth") != "true") {
+    navigate("/");
+  }
   // Establish WebSocket connection and fetch chat history
   useEffect(() => {
     // Establish WebSocket connection with userId as a query parameter
