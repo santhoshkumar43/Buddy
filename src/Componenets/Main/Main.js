@@ -20,6 +20,34 @@ function Main() {
   if (localStorage.getItem("isAuth") != "true") {
     navigate("/");
   }
+  const parseText = (text) => {
+    // Match bold and italic text with regex
+    const boldPattern = /\*\*(.*?)\*\*/g;
+    const italicPattern = /\*(.*?)\*/g;
+
+    // Replace bold and italic text with corresponding HTML elements
+    let parsedText = text
+      .replace(boldPattern, (match, p1) => `<strong>${p1}</strong>`)
+      .replace(italicPattern, (match, p1) => `<em>${p1}</em>`);
+
+    // Split the text by newlines for paragraphs and lists
+    parsedText = parsedText.split("\n").map((line, index) => {
+      if (line.trim().startsWith("* ")) {
+        return (
+          <li
+            key={index}
+            dangerouslySetInnerHTML={{ __html: line.replace("* ", "") }}
+          />
+        );
+      } else if (line.trim() !== "") {
+        return <p key={index} dangerouslySetInnerHTML={{ __html: line }} />;
+      } else {
+        return <p key={index}></p>;
+      }
+    });
+
+    return parsedText;
+  };
   // Establish WebSocket connection and fetch chat history
   useEffect(() => {
     // Establish WebSocket connection with userId as a query parameter
@@ -85,6 +113,11 @@ function Main() {
       setIsLoading(true); // Show the loading spinner while waiting for the bot's response
     }
   };
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      sendMessage();
+    }
+  };
 
   return (
     <div className="main">
@@ -102,7 +135,7 @@ function Main() {
         </div>
         <div className="chatArea" ref={chatContainerRef}>
           {chatHistory.length === 0 ? (
-            <p>No chat history yet.</p>
+            <p className="deftext">No chat history yet.</p>
           ) : (
             chatHistory.map((chat, index) => (
               <div key={index} style={{ marginBottom: "15px" }}>
@@ -115,7 +148,9 @@ function Main() {
                     {chat.bot === "Bot is typing" ? (
                       <Loader />
                     ) : (
-                      <div className="botResponsebulbe">{chat.bot}</div>
+                      <div className="botResponsebulbe">
+                        {parseText(chat.bot)}
+                      </div>
                     )}
                   </div>
                 </div>
@@ -129,6 +164,7 @@ function Main() {
             type="text"
             placeholder="Ask something..."
             value={inputText}
+            onKeyDown={handleKeyPress}
             onChange={(e) => setInputText(e.target.value)} // Update state on input change
           />
           <button

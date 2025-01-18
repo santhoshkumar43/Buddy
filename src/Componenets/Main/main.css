@@ -90,6 +90,9 @@ input:focus {
   overflow: auto;
   overflow-x: hidden;
 }
+.deftext {
+  text-align: center;
+}
 .userChat {
   width: fit-content;
 }
